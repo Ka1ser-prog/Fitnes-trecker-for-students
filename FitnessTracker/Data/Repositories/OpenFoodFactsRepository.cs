@@ -24,7 +24,7 @@ public class OpenFoodFactsRepository : IFoodRepository
     {
         try
         {
-            // Используем стабильный международный эндпоинт v2 API
+            
             string url = $"https://world.openfoodfacts.org/api/v2/product/{barcode}.json";
 
             // Настройка таймаута на случай медленного мобильного интернета (7 секунд)
@@ -36,7 +36,7 @@ public class OpenFoodFactsRepository : IFoodRepository
             var jsonNode = await response.Content.ReadFromJsonAsync<JsonNode>(cancellationToken: cts.Token);
             if (jsonNode == null || jsonNode["status"]?.GetValue<int>() == 0)
             {
-                return null; // Продукт не найден в базе данных OFF
+                return null; 
             }
 
             var productData = jsonNode["product"];
