@@ -13,7 +13,6 @@ public class OpenFoodFactsRepository : IFoodRepository
     {
         _httpClient = httpClient;
 
-        // ОБЯЗАТЕЛЬНО: Без User-Agent сервер Open Food Facts сбрасывает соединение (HttpRequestException)
         if (!_httpClient.DefaultRequestHeaders.Contains("User-Agent"))
         {
             _httpClient.DefaultRequestHeaders.Add("User-Agent", "FitnessTrackerMVP - Android/iOS - Version 1.0");
@@ -27,7 +26,7 @@ public class OpenFoodFactsRepository : IFoodRepository
             
             string url = $"https://world.openfoodfacts.org/api/v2/product/{barcode}.json";
 
-            // Настройка таймаута на случай медленного мобильного интернета (7 секунд)
+
             using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(7));
 
             var response = await _httpClient.GetAsync(url, cts.Token);
@@ -61,7 +60,6 @@ public class OpenFoodFactsRepository : IFoodRepository
         }
         catch (Exception ex)
         {
-            // Выводим реальную причину сетевой ошибки в окно отладки Visual Studio
             System.Diagnostics.Debug.WriteLine($"[OFF API Error]: {ex.Message}");
             return null;
         }
