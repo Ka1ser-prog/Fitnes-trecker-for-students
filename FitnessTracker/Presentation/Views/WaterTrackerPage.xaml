@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FitnessTracker.Presentation.Views.WaterTrackerPage"
+             Title="Вода"
+             BackgroundColor="White">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text=" Главная" 
+                     Command="{Binding NavigateToDashboardCommand}" 
+                     Order="Primary" />
+    </ContentPage.ToolbarItems>
+    
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="25">
+
+            <Label Text="Трекер воды" FontSize="24" TextColor="Blue" FontAttributes="Bold" HorizontalOptions="Center" />
+
+            <!-- КАРТОЧКА ПРОГРЕССА -->
+            <Frame CornerRadius="12" Padding="20" HasShadow="True" BorderColor="Transparent" BackgroundColor="#3498DB">
+                <VerticalStackLayout Spacing="15" HorizontalOptions="Center">
+                    <Label Text="Выпито за сегодня:" TextColor="#EAF2F8" FontSize="14" HorizontalOptions="Center" />
+
+                    <HorizontalStackLayout HorizontalOptions="Center" Spacing="5">
+                        <Label Text="{Binding TargetWater}" FontSize="36" FontAttributes="Bold" TextColor="White" />
+                        <Label Text="/" FontSize="24" TextColor="#EAF2F8" VerticalOptions="Center" />
+                        <Label Text="2000 мл" FontSize="24" TextColor="#EAF2F8" VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+
+                    <!-- Индикатор выполнения нормы -->
+                    <ProgressBar Progress="{Binding WaterProgress}" ProgressColor="White" WidthRequest="250" HeightRequest="10" />
+                </VerticalStackLayout>
+            </Frame>
+            <!-- БЛОК РУЧНОГО ВВОДА КОЛИЧЕСТВА ВОДЫ -->
+            <Frame CornerRadius="12" Padding="15" HasShadow="True" Background="lightgray" BorderColor="Transparent">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Ввести другое количество:" FontSize="14" FontAttributes="Bold" TextColor="#2980B9" />
+
+                    <Grid ColumnDefinitions="*, Auto" ColumnSpacing="15">
+                        <!-- Поле для ввода цифр -->
+                        <Entry Grid.Column="0" 
+                               Text="{Binding CustomWaterAmount}" 
+                               Placeholder="Например: 350" 
+                               Keyboard="Numeric" 
+                               MaxLength="4" 
+                               Background="White"
+                               VerticalOptions="Center" />
+
+                        <!-- Кнопка добавления  -->
+                        <Button Grid.Column="1" 
+                                Text="Добавить" 
+                                Command="{Binding AddWaterCommand}" 
+                                BackgroundColor="#3498DB" 
+                                TextColor="White" 
+                                FontAttributes="Bold" 
+                                CornerRadius="8" 
+                                HeightRequest="45" 
+                                WidthRequest="110" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
+            <!-- КНОПКИ БЫСТРОГО ДОБАВЛЕНИЯ -->
+            <Grid ColumnDefinitions="*, *" ColumnSpacing="15">
+                <Button Grid.Column="0" Text="+250 мл (Стакан)" Command="{Binding AddWaterCommand}" CommandParameter="250" BackgroundColor="#2980B9" TextColor="White" FontAttributes="Bold" CornerRadius="8" HeightRequest="50"/>
+                <Button Grid.Column="1" Text="+500 мл (Бутылка)" Command="{Binding AddWaterCommand}" CommandParameter="500" BackgroundColor="#1F618D" TextColor="White" FontAttributes="Bold" CornerRadius="8" HeightRequest="50"/>
+            </Grid>
+
+            <!-- БЛОК НАСТРОЙКИ НАПОМИНАНИЙ -->
+            <Frame CornerRadius="12" Padding="15" HasShadow="True" BackgroundColor="LightGray" BorderColor="Transparent">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="⏰ Напоминания выпить воды" FontSize="16" FontAttributes="Bold" TextColor="#2980B9" />
+                    <Label Text="Приложение будет напоминать вам каждые 10 секунд (для быстрого теста) сделать глоток воды." FontSize="12" TextColor="Black" />
+
+                    <!-- Переключатель напоминаний -->
+                    <Grid ColumnDefinitions="*, Auto" />
+                    <Label Grid.Column="0" Text="Включить напоминания" VerticalOptions="Center" TextColor="Black" FontSize="14" />
+                    <Switch Grid.Column="1" IsToggled="{Binding IsReminderEnabled}" OnColor="#3498DB" />
+                </VerticalStackLayout>
+            </Frame>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

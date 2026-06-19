@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="FitnessTracker.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:FitnessTracker"
+    xmlns:views="clr-namespace:FitnessTracker.Presentation.Views"
+    Title="FitnessTracker">
+
+    <TabBar>
+        <!-- Вкладка 1: Главная  -->
+        <Tab Title="Главная" Icon="Resources/Images/dotnet_bot.png">
+            <ShellContent ContentTemplate="{DataTemplate views:MainDashboardPage}" Route="MainDashboardPage" />
+        </Tab>
+
+        <!-- Вкладка 2: Вода -->
+        <Tab Title="Вода" Icon="Resources/Images/dotnet_bot.png">
+            <ShellContent ContentTemplate="{DataTemplate views:WaterTrackerPage}" Route="WaterTrackerPage" />
+        </Tab>
+
+        <!-- Вкладка 3: Сон -->
+        <Tab Title="Сон" Icon="Resources/Images/dotnet_bot.png">
+            <ShellContent ContentTemplate="{DataTemplate views:SleepTrackerPage}" Route="SleepTrackerPage" />
+        </Tab>
+
+        <!-- Вкладка 4: Голос -->
+        <Tab Title="Голос" Icon="Resources/Images/dotnet_bot.png">
+            <ShellContent ContentTemplate="{DataTemplate views:VoiceInputPage}" Route="VoiceInputPage" />
+        </Tab>
+
+    </TabBar>
+
+</Shell>

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:zxing="clr-namespace:ZXing.Net.Maui.Controls;assembly=ZXing.Net.MAUI.Controls"
+             x:Class="FitnessTracker.Presentation.Views.ProductScannerPage"
+             Title="Сканер еды (Open Food Facts)"
+             BackgroundColor="White">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="🏠 Главная" 
+                     Command="{Binding NavigateToDashboardCommand}" 
+                     Order="Primary" />
+    </ContentPage.ToolbarItems>
+    
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+
+            <!-- БЛОК С КАМЕРОЙ: Окно сканирования (ОБЯЗАТЕЛЬНО x:Name="BarcodeScanner") -->
+            <Frame CornerRadius="12" Padding="0" HeightRequest="250" IsClippedToBounds="True" HasShadow="True" BorderColor="#FEB25E">
+                <zxing:CameraBarcodeReaderView 
+                    x:Name="BarcodeScanner"
+                    BarcodesDetected="OnBarcodesDetected"
+                    IsDetecting="True"
+                    IsTorchOn="False" />
+            </Frame>
+
+            <!-- БЛОК 1: Поле ввода штрихкода -->
+            <Frame CornerRadius="12" Padding="15" HasShadow="True" BackgroundColor="lightGray" BorderColor="Gray">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Штрихкод продукта:" FontSize="16" FontAttributes="Bold" TextColor="Black"/>
+                    <Entry Text="{Binding BarcodeText}" Placeholder="Например: 4607001770014" Keyboard="Numeric" MaxLength="13" Background="White"/>
+                    <Button Text="Найти" Command="{Binding SearchProductCommand}" BackgroundColor="#27AE60" TextColor="White" FontAttributes="Bold" CornerRadius="8" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- БЛОК 2: Индикатор загрузки -->
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" Color="#27AE60" HorizontalOptions="Center" />
+
+            <!-- БЛОК 3: Вывод сообщения об ошибке -->
+            <Label Text="{Binding ErrorMessage}" TextColor="Red" HorizontalOptions="Center" HorizontalTextAlignment="Center" FontSize="14"
+                   IsVisible="{Binding IsErrorVisible}" />
+
+            <!-- БЛОК 4: Карточка найденного продукта -->
+            <Frame CornerRadius="12" Padding="20" HasShadow="True" BorderColor="Transparent"
+                   IsVisible="{Binding IsProductVisible}">
+                <Grid RowDefinitions="Auto, Auto, Auto, *" ColumnDefinitions="Auto, *" RowSpacing="15" ColumnSpacing="15">
+                    <Image Grid.Row="0" Grid.Column="0" Grid.RowSpan="3" Source="{Binding FoodData.ImageUrl}" WidthRequest="90" HeightRequest="90" Aspect="AspectFit" />
+                    <Label Grid.Row="0" Grid.Column="1" Text="{Binding FoodData.Name}" FontSize="20" FontAttributes="Bold" LineBreakMode="WordWrap" />
+                    <Label Grid.Row="1" Grid.Column="1" Text="{Binding FoodData.Brand}" FontSize="14" TextColor="Gray" />
+
+                    <HorizontalStackLayout Grid.Row="2" Grid.Column="1" Spacing="5">
+                        <Label Text="{Binding FoodData.Calories, StringFormat='{0:F1}'}" FontSize="24" FontAttributes="Bold" TextColor="#E74C3C" />
+                        <Label Text="ккал / 100г" FontSize="14" VerticalOptions="End" TextColor="Gray" />
+                    </HorizontalStackLayout>
+
+                    <Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" ColumnDefinitions="*, *, *" Padding="0,10,0,0">
+                        <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center">
+                            <Label Text="Белки" FontSize="12" TextColor="Gray" HorizontalOptions="Center" />
+                            <Label Text="{Binding FoodData.Proteins, StringFormat='{0:F1} г'}" FontSize="16" FontAttributes="Bold" TextColor="#2980B9" HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center">
+                            <Label Text="Жиры" FontSize="12" TextColor="Gray" HorizontalOptions="Center" />
+                            <Label Text="{Binding FoodData.Fats, StringFormat='{0:F1} г'}" FontSize="16" FontAttributes="Bold" TextColor="#F39C12" HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center">
+                            <Label Text="Углеводы" FontSize="12" TextColor="Gray" HorizontalOptions="Center" />
+                            <Label Text="{Binding FoodData.Carbs, StringFormat='{0:F1} г'}" FontSize="16" FontAttributes="Bold" TextColor="#27AE60" HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+                    </Grid>
+                </Grid>
+            </Frame>
+
+            <!-- БЛОК 5: Ручной ввод продукта и КБЖУ -->
+            <Frame CornerRadius="12" Padding="15" HasShadow="True" BackgroundColor="LightGray" BorderColor="Transparent" Margin="0,10,0,0">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Или введите продукт вручную:" FontSize="16" FontAttributes="Bold" TextColor="Black" />
+
+                    <!-- Поле ввода названия -->
+                    <Entry Text="{Binding ManualName}" Placeholder="Название (например: Банан)" Keyboard="Text" Background="White" />
+
+                    <!-- Сетка для ввода КБЖУ в одну строку -->
+                    <Grid ColumnDefinitions="*, *, *, *" ColumnSpacing="8">
+                        <VerticalStackLayout Grid.Column="0">
+                            <Label Text="Ккал" FontSize="11" HorizontalOptions="Center" TextColor="Gray" />
+                            <Entry Text="{Binding ManualCalories}" Background="White" Placeholder="0" Keyboard="Numeric" HorizontalTextAlignment="Center" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Column="1">
+                            <Label Text="Белки (г)" FontSize="11" HorizontalOptions="Center" TextColor="Gray" />
+                            <Entry Text="{Binding ManualProteins}" Background="White" Placeholder="0" Keyboard="Numeric" HorizontalTextAlignment="Center" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Column="2">
+                            <Label Text="Жиры (г)" FontSize="11" HorizontalOptions="Center" TextColor="Gray" />
+                            <Entry Text="{Binding ManualFats}" Background="White" Placeholder="0" Keyboard="Numeric" HorizontalTextAlignment="Center" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Column="3">
+                            <Label Text="Угл. (г)" FontSize="11" HorizontalOptions="Center" TextColor="Gray" />
+                            <Entry Text="{Binding ManualCarbs}" Background="White" Placeholder="0" Keyboard="Numeric" HorizontalTextAlignment="Center" />
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <!-- Кнопка сохранения -->
+                    <Button Text="Добавить" 
+                            Command="{Binding SaveManualProductCommand}" 
+                            BackgroundColor="#27AE60" 
+                            TextColor="White" 
+                            FontAttributes="Bold" 
+                            CornerRadius="8" 
+                            Margin="0,5,0,0" />
+
+                    <!-- Сообщение об успешном сохранении -->
+                    <Label Text="{Binding ManualSuccessMessage}" 
+                           TextColor="Green" 
+                           HorizontalOptions="Center" 
+                           HorizontalTextAlignment="Center" 
+                           FontSize="14"
+                           FontAttributes="Bold"
+                           IsVisible="{Binding IsManualSuccessVisible}" />
+                </VerticalStackLayout>
+            </Frame>
+            
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

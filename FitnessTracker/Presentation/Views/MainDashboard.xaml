@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FitnessTracker.Presentation.Views.MainDashboardPage"
+             Title="Главная"
+             BackgroundColor="White">
+
+    <Grid RowDefinitions="Auto, Auto, *, Auto" Padding="20" RowSpacing="15">
+         
+        <!-- БЛОК 1: Шапка с Датой и Калориями за день -->
+        <Frame Grid.Row="0" CornerRadius="12" Padding="15" HasShadow="True" BorderColor="#FEB25E" BackgroundColor="#FEB25E">
+            <Grid ColumnDefinitions="*, Auto">
+                <VerticalStackLayout Grid.Column="0" Spacing="2" HorizontalOptions="Start">
+                    <Label Text="Дневник здоровья" TextColor="Black" FontSize="20" FontAttributes="Bold" />
+                    <Label Text="{Binding CurrentDate, StringFormat='{0:dd MMMM yyyy}'}" TextColor="Black" FontSize="13" HorizontalOptions="Start"/>
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Grid.Column="1" HorizontalOptions="End" VerticalOptions="Center">
+                    <Label Text="{Binding TotalCaloriesToday, StringFormat='{0:F0} ккал'}" TextColor="White" FontSize="22" FontAttributes="Bold" />
+                    <Label Text="Всего за сегодня" TextColor="Black" FontSize="10" HorizontalOptions="End" />
+                </VerticalStackLayout>
+            </Grid>
+        </Frame>
+
+        <!-- БЛОК 2: Заголовок ленты и Кнопка Очистить историю -->
+        <Grid Grid.Row="1" ColumnDefinitions="*, Auto" VerticalOptions="Center">
+            <Label Grid.Column="0" Text="История питания за сегодня:" FontSize="16" FontAttributes="Bold" VerticalOptions="Center" />
+            <Button Grid.Column="1" Text="Сброс" Command="{Binding ClearHistoryCommand}" BackgroundColor="Transparent" TextColor="Red" FontSize="13" Padding="5"/>
+        </Grid>
+
+        <!-- БЛОК 3: Лента продуктов из базы данных SQLite -->
+        <CollectionView Grid.Row="2" ItemsSource="{Binding SavedProducts}" Margin="0,5,0,5">
+            
+            <CollectionView.EmptyView>
+                <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Padding="30" Spacing="10">
+                    <Label Text="🍽️" FontSize="44" HorizontalOptions="Center" />
+                    <Label Text="Вы пока не добавили ни одного продукта." TextColor="Gray" HorizontalOptions="Center" HorizontalTextAlignment="Center" FontSize="14" />
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
+
+            <!-- Шаблон отображения одной карточки продукта -->
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame CornerRadius="8" Padding="10" Margin="0,4,0,4" HasShadow="True" BorderColor="LightGreen" BackgroundColor="White" >
+                        <Grid ColumnDefinitions="Auto, *, Auto" ColumnSpacing="12">
+                            <!-- Мини-картинка еды -->
+                            <Image Grid.Column="0" Source="{Binding ImageUrl}" WidthRequest="45" HeightRequest="45" Aspect="AspectFit" />
+
+                            <!-- Название и Бренд -->
+                            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                                <Label Text="{Binding Name}" FontSize="15" TextColor="Black" FontAttributes="Bold" LineBreakMode="TailTruncation" />
+                                <Label Text="{Binding Brand}" FontSize="12" TextColor="Gray" LineBreakMode="TailTruncation" />
+                            </VerticalStackLayout>
+
+                            <!-- КБЖУ продукта -->
+                            <VerticalStackLayout Grid.Column="2" VerticalOptions="Center" HorizontalOptions="End">
+                                <Label Text="{Binding Calories, StringFormat='{0:F0} ккал'}" FontSize="14" FontAttributes="Bold" TextColor="#E74C3C" />
+                                <Label Text="{Binding Carbs, StringFormat='Б:{0:F1} Ж:{1:F1} У:{2:F1}'}" FontSize="10" TextColor="Gray" />
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- БЛОК 4: Кнопка перехода на экран сканирования штрихкодов -->
+        <Button Grid.Row="3" 
+                Text="+" 
+                Command="{Binding NavigateToScannerCommand}"
+                BackgroundColor="#27AE60" TextColor="White" FontSize="50" FontAttributes="Bold" HeightRequest="55" CornerRadius="10" />
+    </Grid>
+</ContentPage>

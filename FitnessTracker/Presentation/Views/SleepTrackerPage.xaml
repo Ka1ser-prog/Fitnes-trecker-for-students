@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FitnessTracker.Presentation.Views.SleepTrackerPage"
+             Title="Сон"
+             BackgroundColor="#F5F5F5">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Главная" 
+                     Command="{Binding NavigateToDashboardCommand}" 
+                     Order="Primary" />
+    </ContentPage.ToolbarItems>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="25">
+
+            <Label Text="Мониторинг сна" FontSize="24" TextColor="black" FontAttributes="Bold" HorizontalOptions="Center" />
+
+            <!-- АВТОМАТИЧЕСКИЙ ТРЕКЕР СНА -->
+            <Frame CornerRadius="12" Padding="15" HasShadow="True" BorderColor="Transparent" BackgroundColor="#2E4180">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Автоматический мониторинг" FontSize="16" FontAttributes="Bold" TextColor="#A569BD" />
+                    <Label Text="Анализирует время, пока ваш смартфон/ПК был выключен или приложение было закрыто." FontSize="11" TextColor="LightGray" />
+
+                    <BoxView HeightRequest="1" Color="#5D6D7E" Margin="0,5,0,5" />
+
+                    <!-- Вывод текста отсутствия -->
+                    <Label Text="{Binding AutoSleepText}" TextColor="White" FontSize="14" FontAttributes="Italic" HorizontalOptions="Center" HorizontalTextAlignment="Center" />
+
+                    <!-- Вывод рекомендации -->
+                    <Label Text="{Binding AutoSleepRecommendation}" TextColor="White" FontSize="13" Margin="0,5,0,0" HorizontalTextAlignment="Center" LineBreakMode="WordWrap" 
+                           IsVisible="{Binding IsAutoSleepVisible}"/>
+                </VerticalStackLayout>
+            </Frame>
+            <!-- БЛОК ВЫБОРА ВРЕМЕНИ -->
+            <Frame CornerRadius="12" Padding="15" HasShadow="True" BackgroundColor="#2E4180" BorderColor="Transparent">
+                <Grid RowDefinitions="Auto, Auto" ColumnDefinitions="*, *" RowSpacing="15" ColumnSpacing="15">
+
+                    <VerticalStackLayout Grid.Row="0" Grid.Column="0" Spacing="5">
+                        <Label Text="🌙 Время засыпания:" FontSize="14" TextColor="Gray" />
+                        <TimePicker Time="{Binding SleepTime}" Background="mediumPurple" Format="HH:mm" HorizontalOptions="Fill" />
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Grid.Row="0" Grid.Column="1" Spacing="5">
+                        <Label Text="☀️ Время подъема:" FontSize="14" TextColor="Gray" />
+                        <TimePicker Time="{Binding WakeTime}" Background="mediumPurple" Format="HH:mm" HorizontalOptions="Fill" />
+                    </VerticalStackLayout>
+
+                    <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                            Text="📊 Рассчитать длительность" 
+                            Command="{Binding CalculateSleepCommand}"
+                            BackgroundColor="#9B59B6" TextColor="White" FontAttributes="Bold" CornerRadius="8" HeightRequest="50" />
+                </Grid>
+            </Frame>
+
+            <!-- КАРТОЧКА АНАЛИТИКИ И РЕКОМЕНДАЦИЙ -->
+            <Frame CornerRadius="12" Padding="20" HasShadow="True" BorderColor="Transparent" 
+                   BackgroundColor="#8E44AD"
+                   IsVisible="{Binding IsSleepResultVisible}">
+                <VerticalStackLayout Spacing="12" HorizontalOptions="Center">
+                    <Label Text="Ваш результат:" TextColor="#F2F4F4" FontSize="14" HorizontalOptions="Center" />
+                    <Label Text="{Binding SleepDurationText}" FontSize="32" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center" />
+                    <BoxView HeightRequest="1" Color="#BB8FCE" Margin="0,5,0,5" />
+                    <Label Text="{Binding SleepRecommendation}" TextColor="White" FontSize="14" HorizontalTextAlignment="Center" LineBreakMode="WordWrap" />
+                </VerticalStackLayout>
+            </Frame>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
