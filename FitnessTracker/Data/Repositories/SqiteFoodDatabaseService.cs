@@ -6,16 +6,13 @@ namespace FitnessTracker.Data.Repositories;
 
 public class SqliteFoodDatabaseService : IFoodDatabaseService
 {
-    // Строка подключения указывает путь к файлу БД в защищенной папке приложения
     private readonly string _connectionString = $"Data Source={Path.Combine(FileSystem.AppDataDirectory, "FitnessTracker.db")}";
 
     public async Task InitializeAsync()
     {
-        // Открываем соединение с базой данных
         using var connection = new SqliteConnection(_connectionString);
         await connection.OpenAsync();
 
-        // Пишем классический SQL-запрос для создания таблицы, если её еще нет
         string createTableSql = @"
             CREATE TABLE IF NOT EXISTS FoodProducts (
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
