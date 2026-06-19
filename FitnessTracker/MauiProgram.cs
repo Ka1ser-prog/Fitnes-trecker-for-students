@@ -11,12 +11,11 @@ public static class MauiProgram
 {
     public static MauiApp CreateMauiApp()
     {
-        // ИСПРАВЛЕНО: Используем правильный метод CreateBuilder() вместо CreateMauiAppBuilder()
         var builder = MauiApp.CreateBuilder();
 
         builder
             .UseMauiApp<App>()
-            .UseMauiCommunityToolkit() // Активируем пакет Toolkit
+            .UseMauiCommunityToolkit() 
             .UseBarcodeReader()
             .ConfigureFonts(fonts =>
             {
